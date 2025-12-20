@@ -171,6 +171,22 @@ app.get("/api/quiz-sets/:id/questions", async (req, res) => {
   }
 });
 
+// Update quiz set title
+app.put("/api/quiz-sets/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  if (!title) {
+    return res.status(400).json({ error: "Title is required" });
+  }
+  try {
+    await query("UPDATE quiz_sets SET title = $1 WHERE id = $2", [title, id]);
+    res.status(204).send();
+  } catch (err) {
+    console.error("update quiz-set error", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Delete whole quiz set
 app.delete("/api/quiz-sets/:id", async (req, res) => {
   const { id } = req.params;
@@ -237,9 +253,8 @@ app.post("/api/quiz-feedback", async (req, res) => {
       .map((q, idx) => {
         const userAnswer =
           idx < answers.length && answers[idx] != null ? answers[idx] : "Không trả lời";
-        return `Câu ${idx + 1}:\n- Câu hỏi: ${q.question}\n- Đáp án đúng: ${
-          q.correctAnswer
-        }\n- Đáp án user chọn: ${userAnswer}`;
+        return `Câu ${idx + 1}:\n- Câu hỏi: ${q.question}\n- Đáp án đúng: ${q.correctAnswer
+          }\n- Đáp án user chọn: ${userAnswer}`;
       })
       .join("\n\n");
 
