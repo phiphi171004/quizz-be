@@ -46,6 +46,11 @@ async function query(text, params) {
   }
 }
 
+// ===== Health Check =====
+app.head("/health", (req, res) => {
+  res.status(200).end();
+});
+
 // ===== Auth =====
 app.post("/api/register", async (req, res) => {
   const { email, password } = req.body;
