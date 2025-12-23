@@ -47,8 +47,8 @@ async function query(text, params) {
 }
 
 // ===== Health Check =====
-app.head("/health", (req, res) => {
-  res.status(200).end();
+app.all("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 // ===== Auth =====
