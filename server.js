@@ -46,6 +46,11 @@ async function query(text, params) {
   }
 }
 
+// ===== Health Check =====
+app.all("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 // ===== Auth =====
 app.post("/api/register", async (req, res) => {
   const { email, password } = req.body;
@@ -318,8 +323,10 @@ Chỉ trả về HTML (không thêm chú thích ngoài HTML).`;
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Backend listening on http://localhost:${PORT}`);
+const HOST = '0.0.0.0'; // Railway requires binding to 0.0.0.0
+
+app.listen(PORT, HOST, () => {
+  console.log(`Backend listening on http://${HOST}:${PORT}`);
 });
 
 
